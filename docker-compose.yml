@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  pact-postgres:
+    image: postgres
+    container_name: pact_postgres_db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: psql postgres -U postgres --command 'SELECT 1'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+
+  pact-broker:
+    image: pactfoundation/pact-broker:latest-multi
+    container_name: pact_broker
+    depends_on:
+      pact-postgres:
+        condition: service_healthy
+    ports:
+      - "9292:9292"
+    restart: always
+    environment:
+      PACT_BROKER_ALLOW_PUBLIC_READ: "true"
+      PACT_BROKER_BASIC_AUTH_USERNAME: pactbroker
+      PACT_BROKER_BASIC_AUTH_PASSWORD: pactbroker
+      PACT_BROKER_DATABASE_URL: "postgres://postgres:root@pact-postgres/postgres"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--tries=1", "--spider", "http://pactbroker:pactbroker@localhost:9292/diagnostic/status/heartbeat"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
