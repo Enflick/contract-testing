@@ -13,9 +13,9 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: postgres
 
-  pact-broker:
+  broker:
     image: pactfoundation/pact-broker:latest-multi
-    container_name: pact_broker
+    container_name: broker.local
     depends_on:
       pact-postgres:
         condition: service_healthy

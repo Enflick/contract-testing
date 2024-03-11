@@ -1,0 +1,59 @@
+{
+  "consumer": {
+    "name": "CheckEmailConsumer"
+  },
+  "provider": {
+    "name": "CheckEmailProvider"
+  },
+  "interactions": [
+    {
+      "description": "a request to get email kabuki@example.com",
+      "providerState": "an email kabuki@example.com does not exist",
+      "request": {
+        "method": "get",
+        "path": "/api2.0/emails/kabuki@example.com"
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+        },
+        "body": {
+          "result": null,
+          "error_code": null
+        },
+        "matchingRules": {
+          "$.body": {
+            "match": "type"
+          }
+        }
+      }
+    },
+    {
+      "description": "a request to get the email grandvasier@example.com",
+      "providerState": "an email grandvasier@example.com that already exists",
+      "request": {
+        "method": "get",
+        "path": "/api2.0/emails/grandvasier@example.com"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "result": null,
+          "error_code": null
+        },
+        "matchingRules": {
+          "$.body": {
+            "match": "type"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

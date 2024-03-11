@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 pact-python = "*"
+pytest = "*"
+yarl = "*"
+requests = "*"
+testcontainers = "*"
 
 [dev-packages]
 
