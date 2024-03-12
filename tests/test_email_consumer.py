@@ -28,7 +28,7 @@ def email_consumer():
 @pytest.fixture(scope="module")
 def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     """ Set up Pact """
-    consumer = Consumer("CheckEmailConsumer")
+    consumer = Consumer("CheckEmailConsumer", version="0.0.1")
     pact = consumer.has_pact_with(
         Provider("CheckEmailProvider"),
         pact_dir=pact_dir,
@@ -49,21 +49,22 @@ def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
 
 def test_check_email_does_not_exist(pact: Pact, email_consumer: CheckEmailConsumer) -> None:
     headers = util.request_headers(util.ANDROID_CLIENT_TYPE)
+    email_address = "kabuki@example.com"
     expected: Dict[str: Any] = {
         "result": None,
         "error_code": None,
     }
 
     (
-        pact.given("an email kabuki@example.com does not exist")
-        .upon_receiving("a request to get email kabuki@example.com")
-        .with_request("get", "/api2.0/emails/kabuki@example.com")
+        pact.given(f"an email {email_address} does not exist")
+        .upon_receiving(f"a request to get email {email_address}")
+        .with_request("get", f"/api2.0/emails/{email_address}")
         .will_respond_with(404, body=Like(expected))
     )
 
     with pact:
 
-        get_email_result = email_consumer.get_email("kabuki@example.com", util.ANDROID_CLIENT_TYPE, headers)
+        get_email_result = email_consumer.get_email(email_address, util.ANDROID_CLIENT_TYPE, headers)
 
         assert isinstance(get_email_result, TextNowResult)
         assert not get_email_result.result
@@ -74,20 +75,21 @@ def test_check_email_does_not_exist(pact: Pact, email_consumer: CheckEmailConsum
 
 def test_check_email_that_exists(pact: Pact, email_consumer: CheckEmailConsumer) -> None:
     headers = util.request_headers(util.IOS_CLIENT_TYPE)
+    email_address = "static_10@example.com"
     expected: Dict[str, Any] = {
         "result": None,
         "error_code": None,
     }
 
     (
-        pact.given("an email grandvasier@example.com that already exists")
-        .upon_receiving("a request to get the email grandvasier@example.com")
-        .with_request("get", "/api2.0/emails/grandvasier@example.com")
+        pact.given(f"an email {email_address} that already exists")
+        .upon_receiving(f"a request to get the email {email_address}")
+        .with_request("get", f"/api2.0/emails/{email_address}")
         .will_respond_with(200, body=Like(expected))
     )
 
     with pact:
-        get_email_result = email_consumer.get_email("grandvasier@example.com", util.IOS_CLIENT_TYPE, headers)
+        get_email_result = email_consumer.get_email(email_address, util.IOS_CLIENT_TYPE, headers)
 
         assert isinstance(get_email_result, TextNowResult)
         assert not get_email_result.result
