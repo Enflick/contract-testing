@@ -10,8 +10,14 @@
       "description": "a request to get email kabuki@example.com",
       "providerState": "an email kabuki@example.com does not exist",
       "request": {
-        "method": "get",
-        "path": "/api2.0/emails/kabuki@example.com"
+        "method": "GET",
+        "path": "/api2.0/emails/kabuki@example.com",
+        "query": "client_type=TN_ANDROID",
+        "headers": {
+          "Content-Type": "application/json",
+          "scar": "bypass_all",
+          "user-agent": "TextNow 24.7.2 (Pixel 6; Android OS 13; en_US)"
+        }
       },
       "response": {
         "status": 404,
@@ -29,11 +35,17 @@
       }
     },
     {
-      "description": "a request to get the email grandvasier@example.com",
-      "providerState": "an email grandvasier@example.com that already exists",
+      "description": "a request to get the email static_10@example.com",
+      "providerState": "an email static_10@example.com that already exists",
       "request": {
-        "method": "get",
-        "path": "/api2.0/emails/grandvasier@example.com"
+        "method": "GET",
+        "path": "/api2.0/emails/static_10@example.com",
+        "query": "client_type=TN_IOS_FREE",
+        "headers": {
+          "Content-Type": "application/json",
+          "scar": "bypass_all",
+          "user-agent": "TextNow/24.7.2 (iPhone14,8; iOS 16.5; Scale/3.00)"
+        }
       },
       "response": {
         "status": 200,

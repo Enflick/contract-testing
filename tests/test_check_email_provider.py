@@ -25,6 +25,7 @@ def test_check_email_exists_against_broker(broker: URL, verifier: Verifier):
         broker_username=broker.user,
         broker_password=broker.password,
         enable_pending=True,
+        publish_version="0.0.1",
         publish_verification_results=True,
     )
 
