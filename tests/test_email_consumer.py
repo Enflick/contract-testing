@@ -28,7 +28,7 @@ def email_consumer():
 @pytest.fixture(scope="module")
 def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     """ Set up Pact """
-    consumer = Consumer("CheckEmailConsumer", version="0.0.1")
+    consumer = Consumer("CheckEmailConsumer", version="0.0.1.6b238f6")
     pact = consumer.has_pact_with(
         Provider("CheckEmailProvider"),
         pact_dir=pact_dir,
