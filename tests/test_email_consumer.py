@@ -4,12 +4,10 @@ import pytest
 import logging
 from src.utils import util
 
-from http import HTTPStatus
 from src.textnow_result import TextNowResult
 
-import requests
-from pact import Consumer, Provider, Format, Like
-from src.check_email_consumer import CheckEmailConsumer
+from pact import Consumer, Provider, Like
+from src.consumers.check_email_consumer import CheckEmailConsumer
 from typing import Any, Dict, Generator, TYPE_CHECKING
 from yarl import URL
 
@@ -28,7 +26,7 @@ def email_consumer():
 @pytest.fixture(scope="module")
 def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     """ Set up Pact """
-    consumer = Consumer("CheckEmailConsumer", version="0.0.1.6b238f6")
+    consumer = Consumer("CheckEmailConsumer", version="0.0.1.66cf249")  # TODO: set version dynamically
     pact = consumer.has_pact_with(
         Provider("CheckEmailProvider"),
         pact_dir=pact_dir,
@@ -58,7 +56,12 @@ def test_check_email_does_not_exist(pact: Pact, email_consumer: CheckEmailConsum
     (
         pact.given(f"an email {email_address} does not exist")
         .upon_receiving(f"a request to get email {email_address}")
-        .with_request("get", f"/api2.0/emails/{email_address}")
+        .with_request(
+            method="GET",
+            path=f"/api2.0/emails/{email_address}",
+            headers=headers,
+            query={"client_type": util.ANDROID_CLIENT_TYPE},
+        )
         .will_respond_with(404, body=Like(expected))
     )
 
@@ -84,7 +87,12 @@ def test_check_email_that_exists(pact: Pact, email_consumer: CheckEmailConsumer)
     (
         pact.given(f"an email {email_address} that already exists")
         .upon_receiving(f"a request to get the email {email_address}")
-        .with_request("get", f"/api2.0/emails/{email_address}")
+        .with_request(
+            method="GET",
+            path=f"/api2.0/emails/{email_address}",
+            headers=headers,
+            query={"client_type": util.IOS_CLIENT_TYPE},
+        )
         .will_respond_with(200, body=Like(expected))
     )
 
