@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from pact import Verifier
+from src.utils import util
 from typing import Any, Generator
 from yarl import URL
 
 import pytest
 
-PROVIDER_URL = URL("https://api.stage.textnow.me")
+PROVIDER_URL = util.PROVIDER_URL
 
 
 @pytest.fixture(scope="module")

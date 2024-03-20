@@ -8,7 +8,7 @@ from typing import Dict, Any
 
 class CheckEmailConsumer:
     """
-
+    Check email consumer class to check if an email exists
     """
     def __init__(self, base_uri: str) -> None:
         """
@@ -19,7 +19,7 @@ class CheckEmailConsumer:
         """
         self.base_uri = base_uri
 
-    def get_email(self, email: str, client_type: str, headers: dict):
+    def get_email(self, email: str, client_type: str, headers: dict) -> TextNowResult:
         """
         Check if an email exists
 

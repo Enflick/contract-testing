@@ -1,3 +1,7 @@
+import string, random
+from subprocess import check_output
+from yarl import URL
+
 # Client Types
 IOS_CLIENT_TYPE = "TN_IOS_FREE"
 ANDROID_CLIENT_TYPE = "TN_ANDROID"
@@ -6,7 +10,10 @@ LATEST_APP_VERSION = "24.7.2"
 CONTENT_TYPE = "application/json"
 SCAR = "bypass_all"
 
-def request_headers(client_type):
+MOCK_URL = URL("http://localhost:8080")
+PROVIDER_URL = URL("https://api.stage.textnow.me")
+
+def request_headers(client_type: str):
     """
     Function that returns request headers depending on the platform user is on
     :param client_type: client type used to make the request
@@ -24,3 +31,22 @@ def request_headers(client_type):
     }
 
     return headers
+
+def get_git_short_commit_hash() -> str:
+    """
+    Function to get the short git commit hash which we use for versioning
+    """
+    return check_output(["git", "rev-parse", "--short", "HEAD"]).decode("ascii").strip()
+
+def generate_username(max_length=17):
+    """
+    Function to generate random characters of specified length to use as usernames
+    :param max_length: the length of the generated string. Note the max length is set as 17 as we and a 3 character
+    prefix
+    :return: username
+    """
+    characters = string.ascii_letters + string.digits
+    username_len = random.randrange(3, max_length)
+    suffix = "".join(random.choice(characters) for _ in range(username_len))
+    # add qe_ prefix to format username
+    return f"qe_{suffix}"

@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from pact.pact import Pact
 
 log = logging.getLogger(__name__)
-MOCK_URL = URL("http://localhost:8080")
+MOCK_URL = util.MOCK_URL
 
 @pytest.fixture()
 def email_consumer():
@@ -26,7 +26,7 @@ def email_consumer():
 @pytest.fixture(scope="module")
 def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     """ Set up Pact """
-    consumer = Consumer("CheckEmailConsumer", version="0.0.1.c55139a")  # TODO: set version dynamically
+    consumer = Consumer("CheckEmailConsumer", version=util.get_git_short_commit_hash())
     pact = consumer.has_pact_with(
         Provider("CheckEmailProvider"),
         pact_dir=pact_dir,

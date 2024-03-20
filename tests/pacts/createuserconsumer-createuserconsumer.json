@@ -1,22 +1,25 @@
 {
   "consumer": {
-    "name": "CheckEmailConsumer"
+    "name": "CreateUserConsumer"
   },
   "provider": {
-    "name": "CheckEmailProvider"
+    "name": "CreateUserConsumer"
   },
   "interactions": [
     {
-      "description": "a request to get the email static_10@example.com",
-      "providerState": "an email static_10@example.com that already exists",
+      "description": "a request to create a user with qe_MErPbXVes3Gd6B as the username",
+      "providerState": "a request to create a user that does not exist with username - qe_MErPbXVes3Gd6B",
       "request": {
-        "method": "GET",
-        "path": "/api2.0/emails/static_10@example.com",
+        "method": "PUT",
+        "path": "/api2.0/users/qe_MErPbXVes3Gd6B",
         "query": "client_type=TN_IOS_FREE",
         "headers": {
           "Content-Type": "application/json",
           "scar": "bypass_all",
           "user-agent": "TextNow/24.7.2 (iPhone14,8; iOS 16.5; Scale/3.00)"
+        },
+        "body": {
+          "password": "Y5^!NFb$)t"
         }
       },
       "response": {
@@ -24,8 +27,9 @@
         "headers": {
         },
         "body": {
-          "result": null,
-          "error_code": null
+          "id": "16f5e8815e7550290c912a44ffc73bb7e17cbedf65cc930x280080100018fd51",
+          "username": "qe_MErPbXVes3Gd6B",
+          "guid_hex": "002-02-001-00018fd51"
         },
         "matchingRules": {
           "$.body": {
