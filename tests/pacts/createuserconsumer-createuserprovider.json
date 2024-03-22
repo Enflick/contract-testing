@@ -3,15 +3,15 @@
     "name": "CreateUserConsumer"
   },
   "provider": {
-    "name": "CreateUserConsumer"
+    "name": "CreateUserProvider"
   },
   "interactions": [
     {
-      "description": "a request to create a user with qe_MsiOWcOFi as the username",
-      "providerState": "a request to create a user that does not exist with username - qe_MsiOWcOFi",
+      "description": "a request to create a user with qe_pact_test_user as the username",
+      "providerState": "a request to create a user that does not exist with username - qe_pact_test_user",
       "request": {
         "method": "PUT",
-        "path": "/api2.0/users/qe_MsiOWcOFi",
+        "path": "/api2.0/users/qe_pact_test_user",
         "query": "client_type=TN_IOS_FREE",
         "headers": {
           "Content-Type": "application/json",
@@ -19,7 +19,8 @@
           "user-agent": "TextNow/24.7.2 (iPhone14,8; iOS 16.5; Scale/3.00)"
         },
         "body": {
-          "password": "HO)Y1(Bc#1"
+          "password": "fake_password",
+          "email": "qe_pact_test_user@example.com"
         }
       },
       "response": {
@@ -28,7 +29,7 @@
         },
         "body": {
           "id": "16f5e8815e7550290c912a44ffc73bb7e17cbedf65cc930x280080100018fd51",
-          "username": "qe_MsiOWcOFi",
+          "username": "qe_pact_test_user",
           "guid_hex": "002-02-001-00018fd51"
         },
         "matchingRules": {

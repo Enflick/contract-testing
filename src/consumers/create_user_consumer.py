@@ -10,20 +10,20 @@ class CreateUserConsumer:
 
     def __init__(self, base_uri: str) -> None:
         """
-        initialize consumer
+        initialize create user consumer
 
         Args:
         base_uri: hostname of provider
         """
         self.base_uri = base_uri
 
-    def create_user(self, username: str, password: str, client_type: str, headers: dict) -> Dict[str, Any]:
+    def create_user(self, username: str, payload: Any, client_type: str, headers: dict) -> Dict[str, Any]:
         """
         Create a TN user
 
         Args:
             username: TN username
-            password: user password
+            payload: user payload that contains email and password
             client_type: client type
             headers: headers used in request
         """
@@ -31,7 +31,7 @@ class CreateUserConsumer:
         params = {"client_type": client_type}
         response = requests.put(
             url=url,
-            json={"password": password},
+            json=payload,
             params=params,
             headers=headers,
             timeout=10,

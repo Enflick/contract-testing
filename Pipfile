@@ -9,7 +9,6 @@ pytest = "*"
 yarl = "*"
 requests = "*"
 testcontainers = "*"
-faker = "*"
 
 [dev-packages]
 

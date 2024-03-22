@@ -5,6 +5,8 @@ from yarl import URL
 # Client Types
 IOS_CLIENT_TYPE = "TN_IOS_FREE"
 ANDROID_CLIENT_TYPE = "TN_ANDROID"
+ADMIN_CLIENT_TYPE = "TN_ADMIN"
+ADMIN_SECRET = "48b45b4c480f8e022c37eb172bf68fb5"
 LATEST_APP_VERSION = "24.7.2"
 
 CONTENT_TYPE = "application/json"
@@ -12,6 +14,7 @@ SCAR = "bypass_all"
 
 MOCK_URL = URL("http://localhost:8080")
 PROVIDER_URL = URL("https://api.stage.textnow.me")
+PROVIDER_INTERNAL_URL = "https://api-private.stage.us-east-1.textnow.io"
 
 def request_headers(client_type: str):
     """
@@ -23,6 +26,8 @@ def request_headers(client_type: str):
         user_agent = f"TextNow {LATEST_APP_VERSION} (Pixel 6; Android OS 13; en_US)"
     elif client_type == IOS_CLIENT_TYPE:
         user_agent = f"TextNow/{LATEST_APP_VERSION} (iPhone14,8; iOS 16.5; Scale/3.00)"
+    elif client_type == ADMIN_CLIENT_TYPE:
+        user_agent = "Go-http-client/2.0"
 
     headers = {
         "Content-Type": CONTENT_TYPE,

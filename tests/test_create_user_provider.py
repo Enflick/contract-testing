@@ -9,19 +9,18 @@ import pytest
 
 PROVIDER_URL = util.PROVIDER_URL
 
-
 @pytest.fixture(scope="module")
-def check_email_verifier() -> Generator[Verifier, Any, None]:
+def create_user_verifier() -> Generator[Verifier, Any, None]:
     verifier = Verifier(
-        provider="CheckEmailProvider",
+        provider="CreateUserProvider",
         provider_base_url=str(PROVIDER_URL)
     )
 
     yield verifier
 
 
-def test_check_email_exists_against_broker(broker: URL, check_email_verifier: Verifier):
-    code, _ = check_email_verifier.verify_with_broker(
+def test_create_user_against_provider(broker: URL, create_user_verifier: Verifier):
+    code, _ = create_user_verifier.verify_with_broker(
         broker_url=str(broker),
         broker_username=broker.user,
         broker_password=broker.password,

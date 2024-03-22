@@ -15,4 +15,5 @@ env/
 venv/
 
 # log files
+log/
 *.log
