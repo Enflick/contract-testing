@@ -7,11 +7,11 @@
   },
   "interactions": [
     {
-      "description": "a request to create a user with qe_pact_test_user as the username",
-      "providerState": "a request to create a user that does not exist with username - qe_pact_test_user",
+      "description": "a request to create a user with qe_pact_test2 as the username",
+      "providerState": "a request to create a user with a username that does not exist",
       "request": {
         "method": "PUT",
-        "path": "/api2.0/users/qe_pact_test_user",
+        "path": "/api2.0/users/qe_pact_test2",
         "query": "client_type=TN_IOS_FREE",
         "headers": {
           "Content-Type": "application/json",
@@ -20,7 +20,7 @@
         },
         "body": {
           "password": "fake_password",
-          "email": "qe_pact_test_user@example.com"
+          "email": "qe_pact_test2@example.com"
         }
       },
       "response": {
@@ -29,8 +29,41 @@
         },
         "body": {
           "id": "16f5e8815e7550290c912a44ffc73bb7e17cbedf65cc930x280080100018fd51",
-          "username": "qe_pact_test_user",
+          "username": "qe_pact_test2",
           "guid_hex": "002-02-001-00018fd51"
+        },
+        "matchingRules": {
+          "$.body": {
+            "match": "type"
+          }
+        }
+      }
+    },
+    {
+      "description": "a request to create a user with qe_pact_exists as the username",
+      "providerState": "a request to create a user that already exists",
+      "request": {
+        "method": "PUT",
+        "path": "/api2.0/users/qe_pact_exists",
+        "query": "client_type=TN_ANDROID",
+        "headers": {
+          "Content-Type": "application/json",
+          "scar": "bypass_all",
+          "user-agent": "TextNow 24.7.2 (Pixel 6; Android OS 13; en_US)"
+        },
+        "body": {
+          "password": "fake_password",
+          "email": "qe_pact_exists@example.com"
+        }
+      },
+      "response": {
+        "status": 400,
+        "headers": {
+        },
+        "body": {
+          "result": null,
+          "error_code": "NAME_NOT_AVAILABLE",
+          "message": "name already in use"
         },
         "matchingRules": {
           "$.body": {

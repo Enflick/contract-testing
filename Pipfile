@@ -9,6 +9,7 @@ pytest = "*"
 yarl = "*"
 requests = "*"
 testcontainers = "*"
+flask = "*"
 
 [dev-packages]
 
