@@ -61,9 +61,8 @@
         "headers": {
         },
         "body": {
-          "result": null,
-          "error_code": "NAME_NOT_AVAILABLE",
-          "message": "name already in use"
+          "message": "name already in use",
+          "error_code": "NAME_NOT_AVAILABLE"
         },
         "matchingRules": {
           "$.body": {

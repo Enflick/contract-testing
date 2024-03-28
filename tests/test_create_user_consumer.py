@@ -21,7 +21,7 @@ def create_user_consumer():
 
 @pytest.fixture(scope="module")
 def create_user_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
-    consumer = Consumer("CreateUserConsumer", version=f"2.7.{util.get_git_short_commit_hash()}")
+    consumer = Consumer("CreateUserConsumer", version=f"3.4.{util.get_git_short_commit_hash()}")
     pact = consumer.has_pact_with(
         Provider("CreateUserProvider"),
         pact_dir=pact_dir,
@@ -83,9 +83,8 @@ def test_user_that_already_exists(create_user_pact: Pact, create_user_consumer: 
     }
     headers = util.request_headers(util.ANDROID_CLIENT_TYPE)
     expected: Dict[str, Any] = {
-        "result": None,
-        "error_code": util.NAME_NOT_AVAILABLE,
         "message": "name already in use",
+        "error_code": util.NAME_NOT_AVAILABLE,
     }
 
     (
@@ -104,8 +103,10 @@ def test_user_that_already_exists(create_user_pact: Pact, create_user_consumer: 
     with create_user_pact:
         create_user_result = create_user_consumer.create_user(username, payload, util.ANDROID_CLIENT_TYPE, headers)
 
-        assert not create_user_result["result"]
-        assert create_user_result["error_code"] == util.NAME_NOT_AVAILABLE
         assert create_user_result["message"] == "name already in use"
+        assert create_user_result["error_code"] == util.NAME_NOT_AVAILABLE
+
+        create_user_pact.verify()
+
 
 

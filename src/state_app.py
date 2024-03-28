@@ -17,20 +17,21 @@ def provider_states():
 
     if provider_state == "a request to create a user with a username that does not exist":
         # delete user if it exists
-        response = delete_user()
+        username = "qe_pact_test2"
+        response = delete_user(username)
     elif provider_state == "a request to create a user that already exists":
         # add user to create a state of a user already existing
         response = add_user()
 
     return response
 
-def delete_user():
+def delete_user(username):
     """
     Function to delete user if it exists, using the username
     """
     admin_delete = AdminDeleteUserConsumer(util.PROVIDER_INTERNAL_URL)
 
-    return admin_delete.admin_delete_user("qe_pact_test2", util.request_headers(util.ADMIN_CLIENT_TYPE))
+    return admin_delete.admin_delete_user(username, util.request_headers(util.ADMIN_CLIENT_TYPE))
 
 def add_user():
     """
