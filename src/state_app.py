@@ -54,7 +54,3 @@ def add_user():
         util.ANDROID_CLIENT_TYPE,
         util.request_headers(util.ANDROID_CLIENT_TYPE),
     )
-
-
-if __name__ == "__main__":
-    app.run(debug=True, port=5001)

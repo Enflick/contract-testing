@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from multiprocessing import Process
 from pact import Verifier
 from src.utils import util
 from typing import Any, Generator
@@ -12,11 +13,14 @@ PROVIDER_URL = util.PROVIDER_URL
 
 @pytest.fixture(scope="module")
 def create_user_verifier() -> Generator[Verifier, Any, None]:
+    # start the state app as a separate process
+    proc = Process(target=util.start_state_app, daemon=True)
     verifier = Verifier(
         provider="CreateUserProvider", provider_base_url=str(PROVIDER_URL)
     )
-
+    proc.start()
     yield verifier
+    proc.kill()
 
 
 def test_create_user_against_provider(broker: URL, create_user_verifier: Verifier):

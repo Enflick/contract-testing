@@ -23,7 +23,7 @@ def create_user_consumer():
 @pytest.fixture(scope="module")
 def create_user_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     consumer = Consumer(
-        "CreateUserConsumer", version=f"3.4.{util.get_git_short_commit_hash()}"
+        "CreateUserConsumer", version=f"3.4.3.{util.get_git_short_commit_hash()}"
     )
     pact = consumer.has_pact_with(
         Provider("CreateUserProvider"),

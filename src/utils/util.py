@@ -1,3 +1,4 @@
+from src.state_app import app
 from subprocess import check_output
 from yarl import URL
 
@@ -5,7 +6,7 @@ from yarl import URL
 IOS_CLIENT_TYPE = "TN_IOS_FREE"
 ANDROID_CLIENT_TYPE = "TN_ANDROID"
 ADMIN_CLIENT_TYPE = "TN_ADMIN"
-ADMIN_SECRET = "48b45b4c480f8e022c37eb172bf68fb5"
+ADMIN_SECRET = "48b45b4c480f8e022c37eb172bf68fb5"  # TODO: set as environment variable
 LATEST_APP_VERSION = "24.7.2"
 # error codes
 NAME_NOT_AVAILABLE = "NAME_NOT_AVAILABLE"
@@ -46,3 +47,11 @@ def get_git_short_commit_hash() -> str:
     Function to get the short git commit hash which we use for versioning
     """
     return check_output(["git", "rev-parse", "--short", "HEAD"]).decode("ascii").strip()
+
+
+def start_state_app():
+    """
+    Function to start the application that manages provider (API) states
+    We use port 5001 as the default port.
+    """
+    app.run(port=5001)
