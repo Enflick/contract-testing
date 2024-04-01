@@ -8,6 +8,7 @@ from src.utils import util
 
 app = Flask(__name__)
 
+
 @app.route("/provider_states/create_user", methods=["POST"])
 def provider_states():
     """
@@ -15,7 +16,10 @@ def provider_states():
     """
     provider_state = request.json["state"]
 
-    if provider_state == "a request to create a user with a username that does not exist":
+    if (
+        provider_state
+        == "a request to create a user with a username that does not exist"
+    ):
         # delete user if it exists
         username = "qe_pact_test2"
         response = delete_user(username)
@@ -25,33 +29,32 @@ def provider_states():
 
     return response
 
+
 def delete_user(username):
     """
     Function to delete user if it exists, using the username
     """
     admin_delete = AdminDeleteUserConsumer(util.PROVIDER_INTERNAL_URL)
 
-    return admin_delete.admin_delete_user(username, util.request_headers(util.ADMIN_CLIENT_TYPE))
+    return admin_delete.admin_delete_user(
+        username, util.request_headers(util.ADMIN_CLIENT_TYPE)
+    )
+
 
 def add_user():
     """
     Function to add a user creating a state of the user already existing
     """
     create_user = CreateUserConsumer(util.PROVIDER_URL)
-    payload = {
-          "password": "fake_password",
-          "email": "qe_pact_exists@example.com"
-        }
+    payload = {"password": "fake_password", "email": "qe_pact_exists@example.com"}
 
     return create_user.create_user(
-        "qe_pact_exists", payload,
+        "qe_pact_exists",
+        payload,
         util.ANDROID_CLIENT_TYPE,
-        util.request_headers(util.ANDROID_CLIENT_TYPE)
+        util.request_headers(util.ANDROID_CLIENT_TYPE),
     )
 
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
-
-
-

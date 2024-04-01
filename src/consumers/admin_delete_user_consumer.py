@@ -4,6 +4,7 @@ import requests
 from typing import Dict, Any
 from src.utils import util
 
+
 class AdminDeleteUserConsumer:
     """
     Admin delete user consumer class

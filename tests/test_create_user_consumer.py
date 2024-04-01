@@ -16,12 +16,15 @@ MOCK_URL = util.MOCK_URL
 
 @pytest.fixture
 def create_user_consumer():
-    """ Returns an instance of the CreateUserConsumer class """
+    """Returns an instance of the CreateUserConsumer class"""
     return CreateUserConsumer(str(MOCK_URL))
+
 
 @pytest.fixture(scope="module")
 def create_user_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
-    consumer = Consumer("CreateUserConsumer", version=f"3.4.{util.get_git_short_commit_hash()}")
+    consumer = Consumer(
+        "CreateUserConsumer", version=f"3.4.{util.get_git_short_commit_hash()}"
+    )
     pact = consumer.has_pact_with(
         Provider("CreateUserProvider"),
         pact_dir=pact_dir,
@@ -38,7 +41,9 @@ def create_user_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     pact.stop_service()
 
 
-def test_create_user(create_user_pact: Pact, create_user_consumer: CreateUserConsumer) -> None:
+def test_create_user(
+    create_user_pact: Pact, create_user_consumer: CreateUserConsumer
+) -> None:
     username = "qe_pact_test2"
     payload = {
         "password": "fake_password",
@@ -52,7 +57,9 @@ def test_create_user(create_user_pact: Pact, create_user_consumer: CreateUserCon
     }
 
     (
-        create_user_pact.given("a request to create a user with a username that does not exist")
+        create_user_pact.given(
+            "a request to create a user with a username that does not exist"
+        )
         .upon_receiving(f"a request to create a user with {username} as the username")
         .with_request(
             method="PUT",
@@ -66,7 +73,9 @@ def test_create_user(create_user_pact: Pact, create_user_consumer: CreateUserCon
 
     with create_user_pact:
 
-        create_user_result = create_user_consumer.create_user(username, payload, util.IOS_CLIENT_TYPE, headers)
+        create_user_result = create_user_consumer.create_user(
+            username, payload, util.IOS_CLIENT_TYPE, headers
+        )
 
         assert "id" in create_user_result.keys()
         assert "username" in create_user_result.keys()
@@ -75,7 +84,9 @@ def test_create_user(create_user_pact: Pact, create_user_consumer: CreateUserCon
         create_user_pact.verify()
 
 
-def test_user_that_already_exists(create_user_pact: Pact, create_user_consumer: CreateUserConsumer) -> None:
+def test_user_that_already_exists(
+    create_user_pact: Pact, create_user_consumer: CreateUserConsumer
+) -> None:
     username = "qe_pact_exists"
     payload = {
         "password": "fake_password",
@@ -101,12 +112,11 @@ def test_user_that_already_exists(create_user_pact: Pact, create_user_consumer: 
     )
 
     with create_user_pact:
-        create_user_result = create_user_consumer.create_user(username, payload, util.ANDROID_CLIENT_TYPE, headers)
+        create_user_result = create_user_consumer.create_user(
+            username, payload, util.ANDROID_CLIENT_TYPE, headers
+        )
 
         assert create_user_result["message"] == "name already in use"
         assert create_user_result["error_code"] == util.NAME_NOT_AVAILABLE
 
         create_user_pact.verify()
-
-
-

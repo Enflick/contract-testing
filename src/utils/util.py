@@ -1,4 +1,3 @@
-import string, random
 from subprocess import check_output
 from yarl import URL
 
@@ -18,6 +17,7 @@ SCAR = "bypass_all"
 MOCK_URL = URL("http://localhost:8080")
 PROVIDER_URL = URL("https://api.stage.textnow.me")
 PROVIDER_INTERNAL_URL = "https://api-private.stage.us-east-1.textnow.io"
+
 
 def request_headers(client_type: str):
     """
@@ -40,21 +40,9 @@ def request_headers(client_type: str):
 
     return headers
 
+
 def get_git_short_commit_hash() -> str:
     """
     Function to get the short git commit hash which we use for versioning
     """
     return check_output(["git", "rev-parse", "--short", "HEAD"]).decode("ascii").strip()
-
-def generate_username(max_length=17):
-    """
-    Function to generate random characters of specified length to use as usernames
-    :param max_length: the length of the generated string. Note the max length is set as 17 as we and a 3 character
-    prefix
-    :return: username
-    """
-    characters = string.ascii_letters + string.digits
-    username_len = random.randrange(3, max_length)
-    suffix = "".join(random.choice(characters) for _ in range(username_len))
-    # add qe_ prefix to format username
-    return f"qe_{suffix}"

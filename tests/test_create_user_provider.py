@@ -9,11 +9,11 @@ import pytest
 
 PROVIDER_URL = util.PROVIDER_URL
 
+
 @pytest.fixture(scope="module")
 def create_user_verifier() -> Generator[Verifier, Any, None]:
     verifier = Verifier(
-        provider="CreateUserProvider",
-        provider_base_url=str(PROVIDER_URL)
+        provider="CreateUserProvider", provider_base_url=str(PROVIDER_URL)
     )
 
     yield verifier
@@ -27,7 +27,7 @@ def test_create_user_against_provider(broker: URL, create_user_verifier: Verifie
         enable_pending=True,
         publish_version="0.0.1",
         publish_verification_results=True,
-        provider_states_setup_url="http://localhost:5001/provider_states/create_user"
+        provider_states_setup_url="http://localhost:5001/provider_states/create_user",
     )
 
     assert code == 0

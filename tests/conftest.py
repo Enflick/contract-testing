@@ -17,6 +17,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         type=str,
     )
 
+
 @pytest.fixture(scope="session")
 def broker(request: pytest.FixtureRequest) -> Generator[URL, Any, None]:
     """
@@ -27,9 +28,7 @@ def broker(request: pytest.FixtureRequest) -> Generator[URL, Any, None]:
     if broker_url:
         yield URL(broker_url)
         return
-    with DockerCompose(
-
-    ) as _:
+    with DockerCompose() as _:
         yield URL("http://pactbroker:pactbroker@localhost:9292")
         return
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 import requests
 from typing import Dict, Any
 
+
 class CreateUserConsumer:
     """
     Create user consumer class
@@ -17,7 +18,9 @@ class CreateUserConsumer:
         """
         self.base_uri = base_uri
 
-    def create_user(self, username: str, payload: Any, client_type: str, headers: dict) -> Dict[str, Any]:
+    def create_user(
+        self, username: str, payload: Any, client_type: str, headers: dict
+    ) -> Dict[str, Any]:
         """
         Create a TN user
 
