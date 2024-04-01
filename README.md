@@ -23,6 +23,8 @@ There will be cases where the provider has to have a certain state e.g. existing
 To manage provider states, we use a stand-alone flask app - **/src/state_app.py** to manage this.
 
 We use the pact-python [library](https://github.com/pact-foundation/pact-python/blob/master/README.md) to write contract tests.
+The pact tests are from the consumer driven point of view and grouped into logical areas e.g. UserConsumer class, handles all interactions
+with the API **/api2.0/users/**, the EmailConsumer class handles all interactions with the API **/api2.0/email/**
 
 ### Pre-Commit hooks
 - Pre-commit hooks are used to ensure proper linting and unified file formatting for this project
@@ -38,4 +40,14 @@ $ pre-commit run --all-files
 ### Pact Versioning
 - Each pact for a consumer has to have a unique version number. If there are modifications or any more tests added, the version
 number will need to be updated before the pact test is run otherwise this could result in a race condition
+
+### Running Tests (local development)
+- Start the pact broker container using the docker-compose file
+```shell
+$ docker-compose up -d
+```
+- Run tests using **pytest** with the **--broker-url** argument
+```shell
+$ pytest -v tests --broker-url=http://pactbroker:pactbroker@localhost:9292
+```
 

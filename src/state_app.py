@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from flask import Flask
 from flask import request
-from src.consumers.admin_delete_user_consumer import AdminDeleteUserConsumer
-from src.consumers.create_user_consumer import CreateUserConsumer
+from src.consumers.user_consumer import UserConsumer
 from src.utils import util
 
 app = Flask(__name__)
@@ -34,9 +33,9 @@ def delete_user(username):
     """
     Function to delete user if it exists, using the username
     """
-    admin_delete = AdminDeleteUserConsumer(util.PROVIDER_INTERNAL_URL)
+    admin_delete_user = UserConsumer(util.PROVIDER_INTERNAL_URL)
 
-    return admin_delete.admin_delete_user(
+    return admin_delete_user.admin_delete_user(
         username, util.request_headers(util.ADMIN_CLIENT_TYPE)
     )
 
@@ -45,7 +44,7 @@ def add_user():
     """
     Function to add a user creating a state of the user already existing
     """
-    create_user = CreateUserConsumer(util.PROVIDER_URL)
+    create_user = UserConsumer(util.PROVIDER_URL)
     payload = {"password": "fake_password", "email": "qe_pact_exists@example.com"}
 
     return create_user.create_user(

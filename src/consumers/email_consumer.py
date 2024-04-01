@@ -6,7 +6,7 @@ from src.textnow_result import TextNowResult
 from typing import Dict, Any
 
 
-class CheckEmailConsumer:
+class EmailConsumer:
     """
     Check email consumer class to check if an email exists
     """

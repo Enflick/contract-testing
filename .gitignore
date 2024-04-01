@@ -17,3 +17,6 @@ venv/
 # log files
 log/
 *.log
+
+# generated pact files
+pacts/

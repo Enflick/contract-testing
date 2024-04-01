@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 from pact import Consumer, Provider, Like
-from src.consumers.create_user_consumer import CreateUserConsumer
+from src.consumers.user_consumer import UserConsumer
 from src.utils import util
 from typing import Any, Dict, Generator, TYPE_CHECKING
 from yarl import URL
@@ -17,16 +17,16 @@ MOCK_URL = util.MOCK_URL
 @pytest.fixture
 def create_user_consumer():
     """Returns an instance of the CreateUserConsumer class"""
-    return CreateUserConsumer(str(MOCK_URL))
+    return UserConsumer(str(MOCK_URL))
 
 
 @pytest.fixture(scope="module")
 def create_user_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     consumer = Consumer(
-        "CreateUserConsumer", version=f"3.4.3.{util.get_git_short_commit_hash()}"
+        "UserConsumer", version=f"3.4.7.{util.get_git_short_commit_hash()}"
     )
     pact = consumer.has_pact_with(
-        Provider("CreateUserProvider"),
+        Provider("UserProvider"),
         pact_dir=pact_dir,
         publish_to_broker=True,
         host_name=MOCK_URL.host,
@@ -42,7 +42,7 @@ def create_user_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
 
 
 def test_create_user(
-    create_user_pact: Pact, create_user_consumer: CreateUserConsumer
+    create_user_pact: Pact, create_user_consumer: UserConsumer
 ) -> None:
     username = "qe_pact_test2"
     payload = {
@@ -85,7 +85,7 @@ def test_create_user(
 
 
 def test_user_that_already_exists(
-    create_user_pact: Pact, create_user_consumer: CreateUserConsumer
+    create_user_pact: Pact, create_user_consumer: UserConsumer
 ) -> None:
     username = "qe_pact_exists"
     payload = {

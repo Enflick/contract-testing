@@ -7,7 +7,7 @@ from src.utils import util
 from src.textnow_result import TextNowResult
 
 from pact import Consumer, Provider, Like
-from src.consumers.check_email_consumer import CheckEmailConsumer
+from src.consumers.email_consumer import EmailConsumer
 from typing import Any, Dict, Generator, TYPE_CHECKING
 from yarl import URL
 
@@ -22,17 +22,17 @@ MOCK_URL = util.MOCK_URL
 @pytest.fixture()
 def email_consumer():
     """Returns an instance of the CheckEmailConsumer class"""
-    return CheckEmailConsumer(str(MOCK_URL))
+    return EmailConsumer(str(MOCK_URL))
 
 
 @pytest.fixture(scope="module")
 def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     """Set up Pact"""
     consumer = Consumer(
-        "CheckEmailConsumer", version=f"1.2.{util.get_git_short_commit_hash()}"
+        "EmailConsumer", version=f"1.3.{util.get_git_short_commit_hash()}"
     )
     pact = consumer.has_pact_with(
-        Provider("CheckEmailProvider"),
+        Provider("EmailProvider"),
         pact_dir=pact_dir,
         publish_to_broker=True,
         # Mock service configuration
@@ -49,9 +49,7 @@ def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     pact.stop_service()
 
 
-def test_check_email_does_not_exist(
-    pact: Pact, email_consumer: CheckEmailConsumer
-) -> None:
+def test_check_email_does_not_exist(pact: Pact, email_consumer: EmailConsumer) -> None:
     headers = util.request_headers(util.ANDROID_CLIENT_TYPE)
     email_address = "kabuki@example.com"
     expected: Dict[str:Any] = {
@@ -84,9 +82,7 @@ def test_check_email_does_not_exist(
         pact.verify()
 
 
-def test_check_email_that_exists(
-    pact: Pact, email_consumer: CheckEmailConsumer
-) -> None:
+def test_check_email_that_exists(pact: Pact, email_consumer: EmailConsumer) -> None:
     headers = util.request_headers(util.IOS_CLIENT_TYPE)
     email_address = "static_10@example.com"
     expected: Dict[str, Any] = {

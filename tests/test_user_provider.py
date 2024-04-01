@@ -15,9 +15,7 @@ PROVIDER_URL = util.PROVIDER_URL
 def create_user_verifier() -> Generator[Verifier, Any, None]:
     # start the state app as a separate process
     proc = Process(target=util.start_state_app, daemon=True)
-    verifier = Verifier(
-        provider="CreateUserProvider", provider_base_url=str(PROVIDER_URL)
-    )
+    verifier = Verifier(provider="UserProvider", provider_base_url=str(PROVIDER_URL))
     proc.start()
     yield verifier
     proc.kill()
