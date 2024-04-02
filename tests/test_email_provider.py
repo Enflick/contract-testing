@@ -7,12 +7,12 @@ from yarl import URL
 
 import pytest
 
-PROVIDER_URL = util.PROVIDER_URL
-
 
 @pytest.fixture(scope="module")
 def check_email_verifier() -> Generator[Verifier, Any, None]:
-    verifier = Verifier(provider="EmailProvider", provider_base_url=str(PROVIDER_URL))
+    verifier = Verifier(
+        provider="EmailProvider", provider_base_url=str(util.PROVIDER_URL)
+    )
 
     yield verifier
 

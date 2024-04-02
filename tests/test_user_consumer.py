@@ -11,13 +11,11 @@ if TYPE_CHECKING:
     from pathlib import Path
     from pact.pact import Pact
 
-MOCK_URL = util.MOCK_URL
-
 
 @pytest.fixture
-def create_user_consumer():
-    """Returns an instance of the CreateUserConsumer class"""
-    return UserConsumer(str(MOCK_URL))
+def user_consumer():
+    """Returns an instance of the UserConsumer class"""
+    return UserConsumer(str(util.MOCK_URL))
 
 
 @pytest.fixture(scope="module")
@@ -29,8 +27,8 @@ def create_user_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
         Provider("UserProvider"),
         pact_dir=pact_dir,
         publish_to_broker=True,
-        host_name=MOCK_URL.host,
-        port=MOCK_URL.port,
+        host_name=util.MOCK_URL.host,
+        port=util.MOCK_URL.port,
         broker_base_url=str(broker),
         broker_username=broker.user,
         broker_password=broker.password,
@@ -41,15 +39,15 @@ def create_user_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     pact.stop_service()
 
 
-def test_create_user(
-    create_user_pact: Pact, create_user_consumer: UserConsumer
-) -> None:
+def test_create_user(create_user_pact: Pact, user_consumer: UserConsumer) -> None:
     username = "qe_pact_test2"
     payload = {
         "password": "fake_password",
         "email": f"{username}@example.com",
     }
     headers = util.request_headers(util.IOS_CLIENT_TYPE)
+
+    # here we provide what the expected response would look like, we are only certain of the username
     expected: Dict[str, Any] = {
         "id": "16f5e8815e7550290c912a44ffc73bb7e17cbedf65cc930x280080100018fd51",
         "username": username,
@@ -73,7 +71,7 @@ def test_create_user(
 
     with create_user_pact:
 
-        create_user_result = create_user_consumer.create_user(
+        create_user_result = user_consumer.create_user(
             username, payload, util.IOS_CLIENT_TYPE, headers
         )
 
@@ -85,7 +83,7 @@ def test_create_user(
 
 
 def test_user_that_already_exists(
-    create_user_pact: Pact, create_user_consumer: UserConsumer
+    create_user_pact: Pact, user_consumer: UserConsumer
 ) -> None:
     username = "qe_pact_exists"
     payload = {
@@ -112,7 +110,7 @@ def test_user_that_already_exists(
     )
 
     with create_user_pact:
-        create_user_result = create_user_consumer.create_user(
+        create_user_result = user_consumer.create_user(
             username, payload, util.ANDROID_CLIENT_TYPE, headers
         )
 

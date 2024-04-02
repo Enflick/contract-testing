@@ -1,3 +1,4 @@
+import os
 from src.state_app import app
 from subprocess import check_output
 from yarl import URL
@@ -6,7 +7,7 @@ from yarl import URL
 IOS_CLIENT_TYPE = "TN_IOS_FREE"
 ANDROID_CLIENT_TYPE = "TN_ANDROID"
 ADMIN_CLIENT_TYPE = "TN_ADMIN"
-ADMIN_SECRET = "48b45b4c480f8e022c37eb172bf68fb5"  # TODO: set as environment variable
+ADMIN_SECRET = os.getenv("TN_ADMIN_SECRET")
 LATEST_APP_VERSION = "24.7.2"
 # error codes
 NAME_NOT_AVAILABLE = "NAME_NOT_AVAILABLE"

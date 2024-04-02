@@ -3,15 +3,16 @@ from __future__ import annotations
 from flask import Flask
 from flask import request
 from src.consumers.user_consumer import UserConsumer
+from src.consumers.phone_numbers_consumer import PhoneNumbersConsumer
 from src.utils import util
 
 app = Flask(__name__)
 
 
-@app.route("/provider_states/create_user", methods=["POST"])
-def provider_states():
+@app.route("/provider_states/users", methods=["POST"])
+def users_provider_states():
     """
-    Get the provider state from the request and perform actions based on it
+    Get the provider state for the users API from the request and perform actions based on it
     """
     provider_state = request.json["state"]
 
@@ -24,7 +25,20 @@ def provider_states():
         response = delete_user(username)
     elif provider_state == "a request to create a user that already exists":
         # add user to create a state of a user already existing
-        response = add_user()
+        response = add_user("qe_pact_exists", "qe_pact_exists@example.com")
+
+    return response
+
+
+@app.route("/provider_states/phone_numbers", methods=["POST"])
+def phone_numbers_provider_states():
+    """Get the provider state for the phone numbers API and perform actions"""
+    provider_state = request.json["state"]
+
+    if provider_state == "a request to reserve phone numbers":
+        user_details = add_user("qe_pact_reserve", "qe_pact_reserve@example.com")
+        session_id = user_details["id"]
+        response = reserve_phone_numbers(session_id)
 
     return response
 
@@ -40,16 +54,34 @@ def delete_user(username):
     )
 
 
-def add_user():
+def add_user(username: str, email: str):
     """
     Function to add a user creating a state of the user already existing
     """
     create_user = UserConsumer(util.PROVIDER_URL)
-    payload = {"password": "fake_password", "email": "qe_pact_exists@example.com"}
+    payload = {"password": "fake_password", "email": email}
 
     return create_user.create_user(
-        "qe_pact_exists",
+        username,
         payload,
         util.ANDROID_CLIENT_TYPE,
+        util.request_headers(util.ANDROID_CLIENT_TYPE),
+    )
+
+
+def reserve_phone_numbers(session_id: str):
+    """
+    Function to reserve TN phone numbers
+    """
+    phone_numbers = PhoneNumbersConsumer(util.PROVIDER_URL)
+    payload = {
+        "area_code": "404",
+        "reservation_length": "10",
+    }
+
+    return phone_numbers.reserve_phone_numbers(
+        session_id,
+        util.ANDROID_CLIENT_TYPE,
+        payload,
         util.request_headers(util.ANDROID_CLIENT_TYPE),
     )

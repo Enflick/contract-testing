@@ -4,7 +4,7 @@ import requests
 from typing import Dict, Any
 
 
-class PhoneNumberConsumer:
+class PhoneNumbersConsumer:
     """
     Creates a phone numbers consumer class
     """
