@@ -18,7 +18,7 @@ SCAR = "bypass_all"
 
 MOCK_URL = URL("http://localhost:8080")
 PROVIDER_URL = URL("https://api.stage.textnow.me")
-PROVIDER_INTERNAL_URL = "https://api-private.stage.us-east-1.textnow.io"
+PROVIDER_INTERNAL_URL = URL("https://api-private.stage.us-east-1.textnow.io")
 
 
 def request_headers(client_type: str):

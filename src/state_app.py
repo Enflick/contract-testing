@@ -48,9 +48,14 @@ def delete_user(username):
     Function to delete user if it exists, using the username
     """
     admin_delete_user = UserConsumer(util.PROVIDER_INTERNAL_URL)
+    params = {
+        "secret": util.ADMIN_SECRET,
+        "client_type": util.ADMIN_CLIENT_TYPE,
+        "sync": "sync",
+    }
 
     return admin_delete_user.admin_delete_user(
-        username, util.request_headers(util.ADMIN_CLIENT_TYPE)
+        username, util.request_headers(util.ADMIN_CLIENT_TYPE), params
     )
 
 

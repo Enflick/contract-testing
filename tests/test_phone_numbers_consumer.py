@@ -82,6 +82,6 @@ def test_reserve_phone_numbers(
             session_id, util.ANDROID_CLIENT_TYPE, payload, headers
         )
 
-        assert type(reserve_phone_numbers["result"]["reservation_id"], str)
-        assert type(reserve_phone_numbers["result"]["phone_numbers"], list)
+        assert isinstance(reserve_phone_numbers["result"]["reservation_id"], str)
+        assert isinstance(reserve_phone_numbers["result"]["phone_numbers"], list)
         assert not reserve_phone_numbers["error_code"]
