@@ -8,6 +8,8 @@ from yarl import URL
 
 import pytest
 
+PORT = util.find_free_port()
+
 
 @pytest.fixture(scope="module")
 def user_verifier() -> Generator[Verifier, Any, None]:
@@ -29,7 +31,7 @@ def test_create_user_against_provider(broker: URL, user_verifier: Verifier):
         enable_pending=True,
         publish_version="0.0.1",
         publish_verification_results=True,
-        provider_states_setup_url="http://localhost:5001/provider_states/users",
+        provider_states_setup_url=f"http://localhost:{5001}/provider_states/users",
     )
 
     assert code == 0

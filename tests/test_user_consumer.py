@@ -11,14 +11,16 @@ if TYPE_CHECKING:
     from pathlib import Path
     from pact.pact import Pact
 
+MOCK_URL = util.get_mock_url()
+
 
 @pytest.fixture
 def user_consumer():
     """Returns an instance of the UserConsumer class"""
-    return UserConsumer(str(util.MOCK_URL))
+    return UserConsumer(str(MOCK_URL))
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def create_user_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     consumer = Consumer(
         "UserConsumer", version=f"3.4.7.{util.get_git_short_commit_hash()}"
@@ -27,8 +29,8 @@ def create_user_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
         Provider("UserProvider"),
         pact_dir=pact_dir,
         publish_to_broker=True,
-        host_name=util.MOCK_URL.host,
-        port=util.MOCK_URL.port,
+        host_name=MOCK_URL.host,
+        port=MOCK_URL.port,
         broker_base_url=str(broker),
         broker_username=broker.user,
         broker_password=broker.password,

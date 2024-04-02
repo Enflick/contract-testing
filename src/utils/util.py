@@ -1,4 +1,6 @@
+import contextlib
 import os
+import socket
 from src.state_app import app
 from subprocess import check_output
 from yarl import URL
@@ -16,7 +18,7 @@ PARAMETER_REQUIRED = "PARAMETER_REQUIRED"
 CONTENT_TYPE = "application/json"
 SCAR = "bypass_all"
 
-MOCK_URL = URL("http://localhost:8080")
+# MOCK_URL = URL("http://localhost:8080")
 PROVIDER_URL = URL("https://api.stage.textnow.me")
 PROVIDER_INTERNAL_URL = URL("https://api-private.stage.us-east-1.textnow.io")
 
@@ -53,6 +55,23 @@ def get_git_short_commit_hash() -> str:
 def start_state_app():
     """
     Function to start the application that manages provider (API) states
-    We use port 5001 as the default port.
     """
     app.run(port=5001)
+
+
+def find_free_port() -> int:
+    """
+    Helper function to find a free port. This is so that we don't run into conflicts
+    """
+    with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+        s.bind(("", 0))
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+        return s.getsockname()[1]
+
+
+def get_mock_url() -> URL:
+    """
+    Function that returns a mock URL for testing consumer contracts
+    """
+    return URL(f"http://localhost:{find_free_port()}")

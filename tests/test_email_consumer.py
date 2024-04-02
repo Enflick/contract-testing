@@ -17,15 +17,16 @@ if TYPE_CHECKING:
     from pact.pact import Pact
 
 # log = logging.getLogger(__name__)
+MOCK_URL = util.get_mock_url()
 
 
 @pytest.fixture()
 def email_consumer():
     """Returns an instance of the EmailConsumer class"""
-    return EmailConsumer(str(util.MOCK_URL))
+    return EmailConsumer(str(MOCK_URL))
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     """Set up Pact"""
     consumer = Consumer(
@@ -36,8 +37,8 @@ def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
         pact_dir=pact_dir,
         publish_to_broker=True,
         # Mock service configuration
-        host_name=util.MOCK_URL.host,
-        port=util.MOCK_URL.port,
+        host_name=MOCK_URL.host,
+        port=MOCK_URL.port,
         # Broker configuration
         broker_base_url=str(broker),
         broker_username=broker.user,
