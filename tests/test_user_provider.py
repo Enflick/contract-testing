@@ -8,8 +8,6 @@ from yarl import URL
 
 import pytest
 
-PORT = util.find_free_port()
-
 
 @pytest.fixture(scope="module")
 def user_verifier() -> Generator[Verifier, Any, None]:

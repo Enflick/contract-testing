@@ -56,7 +56,7 @@ def start_state_app():
     """
     Function to start the application that manages provider (API) states
     """
-    app.run(port=5001)
+    app.run(debug=True, port=5001)
 
 
 def find_free_port() -> int:
@@ -75,3 +75,7 @@ def get_mock_url() -> URL:
     Function that returns a mock URL for testing consumer contracts
     """
     return URL(f"http://localhost:{find_free_port()}")
+
+
+def state_app():
+    return app

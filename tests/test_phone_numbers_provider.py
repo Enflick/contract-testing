@@ -8,12 +8,15 @@ from yarl import URL
 
 import pytest
 
-PORT = util.find_free_port()
+
+def run_server():
+    app = util.state_app()
+    app.run(debug=True, port=5002)
 
 
 @pytest.fixture(scope="module")
 def phone_numbers_verifier() -> Generator[Verifier, Any, None]:
-    proc = Process(target=util.start_state_app, daemon=True)
+    proc = Process(target=run_server, daemon=True)
     verifier = Verifier(
         provider="PhoneNumbersProvider", provider_base_url=str(util.PROVIDER_URL)
     )
@@ -30,7 +33,7 @@ def test_phone_numbers_against_provider(broker: URL, phone_numbers_verifier: Ver
         enable_pending=True,
         publish_version="0.0.1",
         publish_verification_results=True,
-        provider_states_setup_url=f"http://localhost:{5001}/provider_states/phone_numbers",
+        provider_states_setup_url=f"http://localhost:{5002}/provider_states/phone_numbers",
     )
 
     assert code == 0
