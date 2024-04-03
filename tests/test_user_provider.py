@@ -9,10 +9,14 @@ from yarl import URL
 import pytest
 
 
+def run_server():
+    app = util.state_app()
+    app.run(debug=True, port=5001)
+
+
 @pytest.fixture(scope="module")
 def user_verifier() -> Generator[Verifier, Any, None]:
-    # start the state app as a separate process
-    proc = Process(target=util.start_state_app, daemon=True)
+    proc = Process(target=run_server, daemon=True)
     verifier = Verifier(
         provider="UserProvider", provider_base_url=str(util.PROVIDER_URL)
     )
