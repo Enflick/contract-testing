@@ -23,7 +23,7 @@ def phone_numbers_consumer():
 @pytest.fixture(scope="session")
 def phone_numbers_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     consumer = Consumer(
-        "PhoneNumbersConsumer", version=f"1.0.2.{util.get_git_short_commit_hash()}"
+        "PhoneNumbersConsumer", version=f"1.0.3.{util.get_git_short_commit_hash()}"
     )
     pact = consumer.has_pact_with(
         Provider("PhoneNumbersProvider"),
