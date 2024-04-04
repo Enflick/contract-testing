@@ -33,3 +33,16 @@ services:
       timeout: 5s
       retries: 10
       start_period: 15s
+
+  state-app:
+    container_name: state_app.local
+    build: .
+    ports:
+      - "5001:5001"
+    entrypoint: ["python3", "state_app.py"]
+    # flask requires SIGINT to stop gracefully
+    stop_signal: SIGINT
+    environment:
+      - FLASK_SERVER_PORT=5001
+    volumes:
+      - ./src:/app

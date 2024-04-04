@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import os
 from flask import Flask
 from flask import request
-from src.consumers.user_consumer import UserConsumer
-from src.consumers.phone_numbers_consumer import PhoneNumbersConsumer
-from src.utils import util
+from consumers.user_consumer import UserConsumer
+from consumers.phone_numbers_consumer import PhoneNumbersConsumer
+from utils import util
 
 app = Flask(__name__)
 
@@ -90,3 +91,7 @@ def reserve_phone_numbers(session_id: str):
         payload,
         util.request_headers(util.ANDROID_CLIENT_TYPE),
     )
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=os.getenv("FLASK_SERVER_PORT", 5001))

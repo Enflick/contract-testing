@@ -1,7 +1,6 @@
 import contextlib
 import os
 import socket
-from src.state_app import app
 from subprocess import check_output
 from yarl import URL
 
@@ -52,13 +51,6 @@ def get_git_short_commit_hash() -> str:
     return check_output(["git", "rev-parse", "--short", "HEAD"]).decode("ascii").strip()
 
 
-def start_state_app():
-    """
-    Function to start the application that manages provider (API) states
-    """
-    app.run(debug=True, port=5001)
-
-
 def find_free_port() -> int:
     """
     Helper function to find a free port. This is so that we don't run into conflicts
@@ -75,7 +67,3 @@ def get_mock_url() -> URL:
     Function that returns a mock URL for testing consumer contracts
     """
     return URL(f"http://localhost:{find_free_port()}")
-
-
-def state_app():
-    return app
