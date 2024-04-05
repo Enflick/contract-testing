@@ -86,3 +86,44 @@ def test_reserve_phone_numbers(
         assert not reserve_phone_numbers["error_code"]
 
         phone_numbers_pact.verify()
+
+
+def test_assign_phone_number(
+    phone_numbers_pact: Pact, phone_numbers_consumer: PhoneNumbersConsumer
+) -> None:
+    username = "qe_pact_assign"
+    session_id = "16f5e8815e7550290c912a44ffc73bb7e17cbedf65cc930x280080100018fd29"
+    payload = {"reservation_id": "88495d40030fc7c5", "phone_number": "7059996138"}
+    params = {
+        "client_id": session_id,
+        "client_type": util.IOS_CLIENT_TYPE,
+    }
+    headers = util.request_headers(util.IOS_CLIENT_TYPE)
+
+    expected: Dict[str, Any] = {
+        "result": {"phone_number": "7059996138"},
+        "error_code": None,
+    }
+
+    (
+        phone_numbers_pact.given("a request to assign a given phone number")
+        .upon_receiving(f"a request to assign a phone number to a user - {username}")
+        .with_request(
+            method="POST",
+            path="/api2.0/phone_numbers/assign_reserved",
+            headers=headers,
+            query=params,
+            body=payload,
+        )
+        .will_respond_with(200, body=Like(expected))
+    )
+
+    with phone_numbers_pact:
+        assign_phone_numbers = phone_numbers_consumer.assign_phone_number(
+            params, payload, headers
+        )
+
+        assert isinstance(assign_phone_numbers["result"]["phone_number"], str)
+        assert not assign_phone_numbers["error_code"]
+
+        phone_numbers_pact.verify()

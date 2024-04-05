@@ -45,3 +45,22 @@ class PhoneNumbersConsumer:
         data: Dict[str, Any] = response.json()
 
         return data
+
+    def assign_phone_number(
+        self, params: dict, payload: dict, headers: dict
+    ) -> Dict[str, Any]:
+        """
+        Assign a TN number to a user
+
+        Args:
+            params: query params of the request that include the client_id and client_type
+            payload: payload of the request that include the reservation_id and phone_number
+            headers: headers used in request
+        """
+        url = f"{self.base_uri}/api2.0/phone_numbers/assign_reserved"
+        response = requests.post(
+            url=url, json=payload, params=params, headers=headers, timeout=10
+        )
+        data: Dict[str, Any] = response.json()
+
+        return data
