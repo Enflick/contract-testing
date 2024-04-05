@@ -49,6 +49,9 @@ is required as this where the environment variables **FLASK_SERVER_PORT**, and *
 $ docker-compose up -d
 ```
 - Run tests from the terminal using **pytest** with the **--broker-url** argument
+- Note: The first time you run the pact tests after starting the pact broker, the provider tests
+will fail as the pacts have not been registered initially. You would need to run the command below again. Another work around
+is to run the individual consumer tests to register the pacts with the broker.
 ```shell
 $ pytest -v tests --broker-url=http://<pact_broker_username>:<pact_broker_password@localhost:9292
 ```
