@@ -37,6 +37,8 @@ def phone_numbers_provider_states():
     provider_state = request.json["state"]
 
     if provider_state == "a request to reserve phone numbers":
+        # delete user if exists
+        delete_user("qe_pact_reserve")
         user_details = add_user("qe_pact_reserve", "qe_pact_reserve@example.com")
         session_id = user_details["id"]
         response = reserve_phone_numbers(session_id)
