@@ -43,11 +43,17 @@ number will need to be updated before the pact test is run otherwise this could 
 
 ### Running Tests (local development)
 - Start the pact broker container using the docker-compose file
+- Note that an environment variables file **default.env** located in the same place as the **docker-compose.yml** file
+is required as this where the environment variables **FLASK_SERVER_PORT**, and **TN_ADMIN_SECRET** are set.
 ```shell
 $ docker-compose up -d
 ```
-- Run tests using **pytest** with the **--broker-url** argument
+- Run tests from the terminal using **pytest** with the **--broker-url** argument
 ```shell
-$ pytest -v tests --broker-url=http://pactbroker:pactbroker@localhost:9292
+$ pytest -v tests --broker-url=http://<pact_broker_username>:<pact_broker_password@localhost:9292
+```
+- Run individual pact tests from the terminal using
+```shell
+$ pytest -v tests/<test_name> --broker-url=http://<pact_broker_username>:<pact_broker_password@localhost:9292
 ```
 
