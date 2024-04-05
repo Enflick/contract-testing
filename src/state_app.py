@@ -42,6 +42,17 @@ def phone_numbers_provider_states():
         user_details = add_user("qe_pact_reserve", "qe_pact_reserve@example.com")
         session_id = user_details["id"]
         response = reserve_phone_numbers(session_id)
+    elif provider_state == "a request to assign a given phone number":
+        # delete user if exists
+        delete_user("qe_pact_assign")
+        user_details = add_user("qe_pact_assign", "qe_pact_assign@example.com")
+        session_id = user_details["id"]
+        reserved_numbers_details = reserve_phone_numbers(session_id)
+        payload = {
+            "reservation_id": reserved_numbers_details["result"]["reservation_id"],
+            "phone_number": reserved_numbers_details["result"]["phone_numbers"][0],
+        }
+        response = assign_phone_number(session_id, payload)
 
     return response
 
@@ -92,6 +103,18 @@ def reserve_phone_numbers(session_id: str):
         util.ANDROID_CLIENT_TYPE,
         payload,
         util.request_headers(util.ANDROID_CLIENT_TYPE),
+    )
+
+
+def assign_phone_number(session_id: str, payload: dict):
+    phone_numbers = PhoneNumbersConsumer(util.PROVIDER_URL)
+    params = {
+        "client_id": session_id,
+        "client_type": util.IOS_CLIENT_TYPE,
+    }
+
+    return phone_numbers.assign_phone_number(
+        params, payload, util.request_headers(util.IOS_CLIENT_TYPE)
     )
 
 
