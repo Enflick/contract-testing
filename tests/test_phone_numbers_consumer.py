@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from pact import Consumer, Provider, Like
+from pact import Consumer, Provider, Like, EachLike
 from src.consumers.phone_numbers_consumer import PhoneNumbersConsumer
 from src.utils import util
 from typing import Any, Dict, Generator, TYPE_CHECKING
@@ -23,7 +23,7 @@ def phone_numbers_consumer():
 @pytest.fixture(scope="session")
 def phone_numbers_pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     consumer = Consumer(
-        "PhoneNumbersConsumer", version=f"1.0.4.{util.get_git_short_commit_hash()}"
+        "PhoneNumbersConsumer", version=f"1.0.5.{util.get_git_short_commit_hash()}"
     )
     pact = consumer.has_pact_with(
         Provider("PhoneNumbersProvider"),
@@ -56,13 +56,10 @@ def test_reserve_phone_numbers(
     expected: Dict[str, Any] = {
         "result": {
             "reservation_id": "88495d40030fc7c5",
-            "phone_numbers": [
+            "phone_numbers": EachLike(
                 "7052439308",
-                "7053153602",
-                "7057100092",
-                "7057108812",
-                "7058093440",
-            ],
+                minimum=2,  # we expect there to be a minimum of 2 reserved numbers
+            ),
         },
         "error_code": None,
     }

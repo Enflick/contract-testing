@@ -44,5 +44,6 @@ services:
     stop_signal: SIGINT
     environment:
       - FLASK_SERVER_PORT=5001
+      - TN_ADMIN_SECRET=48b45b4c480f8e022c37eb172bf68fb5
     volumes:
       - ./src:/app

@@ -17,7 +17,6 @@ PARAMETER_REQUIRED = "PARAMETER_REQUIRED"
 CONTENT_TYPE = "application/json"
 SCAR = "bypass_all"
 
-# MOCK_URL = URL("http://localhost:8080")
 PROVIDER_URL = URL("https://api.stage.textnow.me")
 PROVIDER_INTERNAL_URL = URL("https://api-private.stage.us-east-1.textnow.io")
 
