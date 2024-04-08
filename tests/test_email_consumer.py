@@ -52,14 +52,14 @@ def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
 
 def test_check_email_does_not_exist(pact: Pact, email_consumer: EmailConsumer) -> None:
     headers = util.request_headers(util.ANDROID_CLIENT_TYPE)
-    email_address = "kabuki@example.com"
+    email_address = "qe_pact_email@example.com"
     expected: Dict[str:Any] = {
         "result": None,
         "error_code": None,
     }
 
     (
-        pact.given(f"an email {email_address} does not exist")
+        pact.given("an email qe_pact_email@example.com does not exist")
         .upon_receiving(f"a request to get email {email_address}")
         .with_request(
             method="GET",

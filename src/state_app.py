@@ -13,7 +13,7 @@ app = Flask(__name__)
 @app.route("/provider_states/users", methods=["POST"])
 def users_provider_states():
     """
-    Get the provider state for the users API from the request and perform actions based on it
+    Set the provider state for the users API /api2.0/users/
     """
     provider_state = request.json["state"]
 
@@ -33,7 +33,9 @@ def users_provider_states():
 
 @app.route("/provider_states/phone_numbers", methods=["POST"])
 def phone_numbers_provider_states():
-    """Get the provider state for the phone numbers API and perform actions"""
+    """
+    Set the provider state for the phone numbers API /api2.0/phone_numbers/
+    """
     provider_state = request.json["state"]
 
     if provider_state == "a request to reserve phone numbers":
@@ -53,6 +55,20 @@ def phone_numbers_provider_states():
             "phone_number": reserved_numbers_details["result"]["phone_numbers"][0],
         }
         response = assign_phone_number(session_id, payload)
+
+    return response
+
+
+@app.route("/provider_states/email", methods=["GET"])
+def email_provider_states():
+    """
+    Set the provider state for emails API - /api2.0/emails/
+    """
+    provider_state = request.json["state"]
+
+    if provider_state == "an email qe_pact_email@example.com does not exist":
+        # delete use in case it exists
+        response = delete_user("kabuki")
 
     return response
 

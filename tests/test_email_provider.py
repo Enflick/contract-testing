@@ -25,6 +25,7 @@ def test_check_email_exists_against_broker(broker: URL, check_email_verifier: Ve
         enable_pending=True,
         publish_version="0.0.1",
         publish_verification_results=True,
+        provider_states_setup_url="http://localhost:5001/provider_states/emails",
     )
 
     assert code == 0
