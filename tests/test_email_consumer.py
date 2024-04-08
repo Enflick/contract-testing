@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import pytest
 
-# import logging
 from src.utils import util
 
 from src.textnow_result import TextNowResult
@@ -16,7 +15,6 @@ if TYPE_CHECKING:
     from pathlib import Path
     from pact.pact import Pact
 
-# log = logging.getLogger(__name__)
 MOCK_URL = util.get_mock_url()
 
 
