@@ -45,6 +45,19 @@ number will need to be updated before the pact test is run otherwise this could 
 - Start the pact broker container using the docker-compose file
 - Note that an environment variables file **default.env** located in the same place as the **docker-compose.yml** file
 is required as this where the environment variables **FLASK_SERVER_PORT**, and **TN_ADMIN_SECRET** are set.
+Ensure the contents of **default.env** have the following remaining environment variables
+```dotenv
+FLASK_SERVER_PORT=5001
+TN_ADMIN_SECRET=*******
+PACT_BROKER_ALLOW_PUBLIC_READ=true"
+PACT_BROKER_BASIC_AUTH_USERNAME=pactbroker
+PACT_BROKER_BASIC_AUTH_PASSWORD=pactbroker
+PACT_BROKER_DATABASE_URL="postgres://postgres:root@pact-postgres/postgres"
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=root
+POSTGRES_DB=postgres
+```
+- Start the containers using the command below
 ```shell
 $ docker-compose up -d
 ```
