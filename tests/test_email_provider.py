@@ -7,26 +7,25 @@ from yarl import URL
 
 import pytest
 
-PROVIDER_URL = util.PROVIDER_URL
 
 @pytest.fixture(scope="module")
-def create_user_verifier() -> Generator[Verifier, Any, None]:
+def check_email_verifier() -> Generator[Verifier, Any, None]:
     verifier = Verifier(
-        provider="CreateUserProvider",
-        provider_base_url=str(PROVIDER_URL)
+        provider="EmailProvider", provider_base_url=str(util.PROVIDER_URL)
     )
 
     yield verifier
 
 
-def test_create_user_against_provider(broker: URL, create_user_verifier: Verifier):
-    code, _ = create_user_verifier.verify_with_broker(
+def test_check_email_exists_against_broker(broker: URL, check_email_verifier: Verifier):
+    code, _ = check_email_verifier.verify_with_broker(
         broker_url=str(broker),
         broker_username=broker.user,
         broker_password=broker.password,
         enable_pending=True,
         publish_version="0.0.1",
         publish_verification_results=True,
+        provider_states_setup_url="http://localhost:5001/provider_states/emails",
     )
 
     assert code == 0

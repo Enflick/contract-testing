@@ -9,11 +9,14 @@ __pycache__/
 .idea/
 
 # environments
-.env
-.venv
+*.env
+*.venv
 env/
 venv/
 
 # log files
 log/
 *.log
+
+# generated pact files
+pacts/

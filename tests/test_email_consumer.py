@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import pytest
-import logging
+
 from src.utils import util
 
 from src.textnow_result import TextNowResult
 
 from pact import Consumer, Provider, Like
-from src.consumers.check_email_consumer import CheckEmailConsumer
+from src.consumers.email_consumer import EmailConsumer
 from typing import Any, Dict, Generator, TYPE_CHECKING
 from yarl import URL
 
@@ -15,20 +15,23 @@ if TYPE_CHECKING:
     from pathlib import Path
     from pact.pact import Pact
 
-log = logging.getLogger(__name__)
-MOCK_URL = util.MOCK_URL
+MOCK_URL = util.get_mock_url()
+
 
 @pytest.fixture()
 def email_consumer():
-    """ Returns an instance of the CheckEmailConsumer class """
-    return CheckEmailConsumer(str(MOCK_URL))
+    """Returns an instance of the EmailConsumer class"""
+    return EmailConsumer(str(MOCK_URL))
 
-@pytest.fixture(scope="module")
+
+@pytest.fixture(scope="session")
 def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
-    """ Set up Pact """
-    consumer = Consumer("CheckEmailConsumer", version=f"1.2.{util.get_git_short_commit_hash()}")
+    """Set up Pact"""
+    consumer = Consumer(
+        "EmailConsumer", version=f"1.3.{util.get_git_short_commit_hash()}"
+    )
     pact = consumer.has_pact_with(
-        Provider("CheckEmailProvider"),
+        Provider("EmailProvider"),
         pact_dir=pact_dir,
         publish_to_broker=True,
         # Mock service configuration
@@ -45,16 +48,16 @@ def pact(broker: URL, pact_dir: Path) -> Generator[Pact, Any, None]:
     pact.stop_service()
 
 
-def test_check_email_does_not_exist(pact: Pact, email_consumer: CheckEmailConsumer) -> None:
+def test_check_email_does_not_exist(pact: Pact, email_consumer: EmailConsumer) -> None:
     headers = util.request_headers(util.ANDROID_CLIENT_TYPE)
-    email_address = "kabuki@example.com"
-    expected: Dict[str: Any] = {
+    email_address = "qe_pact_email@example.com"
+    expected: Dict[str:Any] = {
         "result": None,
         "error_code": None,
     }
 
     (
-        pact.given(f"an email {email_address} does not exist")
+        pact.given("an email qe_pact_email@example.com does not exist")
         .upon_receiving(f"a request to get email {email_address}")
         .with_request(
             method="GET",
@@ -67,7 +70,9 @@ def test_check_email_does_not_exist(pact: Pact, email_consumer: CheckEmailConsum
 
     with pact:
 
-        get_email_result = email_consumer.get_email(email_address, util.ANDROID_CLIENT_TYPE, headers)
+        get_email_result = email_consumer.get_email(
+            email_address, util.ANDROID_CLIENT_TYPE, headers
+        )
 
         assert isinstance(get_email_result, TextNowResult)
         assert not get_email_result.result
@@ -76,7 +81,7 @@ def test_check_email_does_not_exist(pact: Pact, email_consumer: CheckEmailConsum
         pact.verify()
 
 
-def test_check_email_that_exists(pact: Pact, email_consumer: CheckEmailConsumer) -> None:
+def test_check_email_that_exists(pact: Pact, email_consumer: EmailConsumer) -> None:
     headers = util.request_headers(util.IOS_CLIENT_TYPE)
     email_address = "static_10@example.com"
     expected: Dict[str, Any] = {
@@ -97,12 +102,12 @@ def test_check_email_that_exists(pact: Pact, email_consumer: CheckEmailConsumer)
     )
 
     with pact:
-        get_email_result = email_consumer.get_email(email_address, util.IOS_CLIENT_TYPE, headers)
+        get_email_result = email_consumer.get_email(
+            email_address, util.IOS_CLIENT_TYPE, headers
+        )
 
         assert isinstance(get_email_result, TextNowResult)
         assert not get_email_result.result
         assert not get_email_result.error_code
 
         pact.verify()
-
-

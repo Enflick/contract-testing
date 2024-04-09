@@ -1,4 +1,6 @@
-import string, random
+import contextlib
+import os
+import socket
 from subprocess import check_output
 from yarl import URL
 
@@ -6,15 +8,18 @@ from yarl import URL
 IOS_CLIENT_TYPE = "TN_IOS_FREE"
 ANDROID_CLIENT_TYPE = "TN_ANDROID"
 ADMIN_CLIENT_TYPE = "TN_ADMIN"
-ADMIN_SECRET = "48b45b4c480f8e022c37eb172bf68fb5"
+ADMIN_SECRET = os.getenv("TN_ADMIN_SECRET")
 LATEST_APP_VERSION = "24.7.2"
+# error codes
+NAME_NOT_AVAILABLE = "NAME_NOT_AVAILABLE"
+PARAMETER_REQUIRED = "PARAMETER_REQUIRED"
 
 CONTENT_TYPE = "application/json"
 SCAR = "bypass_all"
 
-MOCK_URL = URL("http://localhost:8080")
 PROVIDER_URL = URL("https://api.stage.textnow.me")
-PROVIDER_INTERNAL_URL = "https://api-private.stage.us-east-1.textnow.io"
+PROVIDER_INTERNAL_URL = URL("https://api-private.stage.us-east-1.textnow.io")
+
 
 def request_headers(client_type: str):
     """
@@ -37,21 +42,27 @@ def request_headers(client_type: str):
 
     return headers
 
+
 def get_git_short_commit_hash() -> str:
     """
     Function to get the short git commit hash which we use for versioning
     """
     return check_output(["git", "rev-parse", "--short", "HEAD"]).decode("ascii").strip()
 
-def generate_username(max_length=17):
+
+def find_free_port() -> int:
     """
-    Function to generate random characters of specified length to use as usernames
-    :param max_length: the length of the generated string. Note the max length is set as 17 as we and a 3 character
-    prefix
-    :return: username
+    Helper function to find a free port. This is so that we don't run into conflicts
     """
-    characters = string.ascii_letters + string.digits
-    username_len = random.randrange(3, max_length)
-    suffix = "".join(random.choice(characters) for _ in range(username_len))
-    # add qe_ prefix to format username
-    return f"qe_{suffix}"
+    with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+        s.bind(("", 0))
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+        return s.getsockname()[1]
+
+
+def get_mock_url() -> URL:
+    """
+    Function that returns a mock URL for testing consumer contracts
+    """
+    return URL(f"http://localhost:{find_free_port()}")
