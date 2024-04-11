@@ -1,5 +1,12 @@
 # Contract Testing
-- This repo contains contract tests for TextNow APIs. Please follow the guidelines below for local development
+We currently have situation where there is a gap (in time) between when changes are made to Backend APIs (provider), and when clients (consumer)
+ingest or implement these changes. These could lead to breaking changes being released to stage or production or significant time
+passing before the consumers realize that they need to make changes.
+
+These are the key reasons for implementing contract testing which aims is to fill the gap between changes made to the specific provider,
+and what the consumer expects.
+
+This repo contains contract tests for TextNow APIs. Please follow the guidelines below for local development
 
 ### Pre-requisites
 - Tools used for this project include **Python 3.11**, **Docker** to run a local **Pact** broker, and **Pipenv** for dependency management
