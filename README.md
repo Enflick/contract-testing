@@ -4,7 +4,8 @@ ingest or implement these changes. These could lead to breaking changes being re
 passing before the consumers realize that they need to make changes.
 
 These are the key reasons for implementing contract testing which aims is to fill the gap between changes made to the specific provider,
-and what the consumer expects.
+and what the consumer expects. With contract testing in place, we would be in a better position to know when the implementations of the provider and consumer
+become incompatible, and when this happens. This way the provider and consumer are more in-sync with the evolution of the API.
 
 This repo contains contract tests for TextNow APIs. Please follow the guidelines below for local development
 
